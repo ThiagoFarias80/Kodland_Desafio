@@ -7,54 +7,54 @@ from pgzero.actor import Actor
 WIDTH = 1360
 HEIGHT = 728
 
-# Estado do jogo
+
 current_screen = "menu"
 sound_on = True
 
-ground_y = HEIGHT - (HEIGHT * 0.2)  # <-- Aqui
+ground_y = HEIGHT - (HEIGHT * 0.2)  
 
-# Alien
+
 alien = Actor("alien")
 alien.x = 100
 alien.bottom = ground_y
 
 
-# Botoes do menu 
+
 button_width = 200
 button_height = 50
 button_x = (WIDTH - button_width) // 2
-button_y_start = 180  # posição logo abaixo do título
+button_y_start = 180  
 
-# Inicializa o volume
-volume_level = 0.5  # Valor entre 0 (mudo) e 1 (volume máximo)
 
-# Botão de controle de volume no menu
-volume_button = Rect((button_x, button_y_start + 240), (button_width, button_height))  # Adiciona um botão para controle de volume
+volume_level = 0.5  
+
+
+volume_button = Rect((button_x, button_y_start + 240), (button_width, button_height))  
 
 start_button = Rect((button_x, button_y_start), (button_width, button_height))
 sound_button = Rect((button_x, button_y_start + 80), (button_width, button_height))
 exit_button = Rect((button_x, button_y_start + 160), (button_width, button_height))
 
-# Animacoes
+
 walk_right_images = ["alien_walk1", "alien_walk2"]
 walk_left_images = ["alien_walk3", "alien_walk4"]
 walk_index = 0
 walk_timer = 0
 
-# Pulo
+
 is_jumping = False
 velocity_y = 0
 gravity = 0.5
 ground_y = 500
 
-# Agachar
+
 is_crouching = False
 
-# Direcao
+
 facing_right = True
 
 game_music = sounds.load("gameplay")
-game_music_playing = False  # Controla o estado da música
+game_music_playing = False  
 
 vida = 3
 vida_max = 3
@@ -69,12 +69,12 @@ print("tile_width:", tile_width)
 print("water_tile_width:", water_tile_width)
 
 tile_width = Actor("terrain_grass_block_top").width
-agua_width = tile_width * 2  # água ocupa 2 blocos, ajuste como quiser
-agua_x = tile_width * 3     # posição do buraco iniciando no bloco 9 (ajuste como necessário)
+agua_width = tile_width * 2
+agua_x = tile_width * 3    
 
 agua_rect = Rect((agua_x, ground_y), (tile_width * 2, HEIGHT - ground_y))
 
-#Peixe
+
 fish = Actor("fish_purple_down")
 fish.base_x = agua_rect.left + agua_rect.width // 2
 fish.base_y = agua_rect.top + 60
@@ -82,23 +82,23 @@ fish.x = fish.base_x
 fish.y = fish.base_y
 fish.direction = "up"
 fish_timer = 0
-fish_cooldown = 300  # frames (5 segundos se o jogo roda a 60fps)
+fish_cooldown = 300  
 fish_animation_step = 0
 fish.visible = True
 
-# Sapo
-frog = Actor("frog_idle_2")  # começa virado para a direita
-frog.x = WIDTH - 100         # canto direito da tela
+
+frog = Actor("frog_idle_2")  
+frog.x = WIDTH - 100        
 frog.bottom = ground_y
 frog.direction = "left"
 frog.jump_timer = 60
 frog.is_jumping = False
 frog.velocity_y = 0
-frog.scale = 0.7  # Apenas visual — para hitbox usaremos retângulo manual
+frog.scale = 0.7  
 
 button_y_game_over_start = HEIGHT // 2 - 100 
-retry_button = Rect((button_x, button_y_game_over_start + 60), (button_width, button_height))  # Tentar Novamente, um pouco abaixo de Game Over
-menu_button = Rect((button_x, button_y_game_over_start + 180), (button_width, button_height))  # Voltar ao Menu, mais abaixo ainda
+retry_button = Rect((button_x, button_y_game_over_start + 60), (button_width, button_height)) 
+menu_button = Rect((button_x, button_y_game_over_start + 180), (button_width, button_height))  
 
 def draw():
     if current_screen == "menu":
@@ -134,13 +134,13 @@ def draw_menu():
     screen.draw.filled_rect(exit_button, (150, 0, 0))
     screen.draw.text("Sair", center=exit_button.center, fontsize=30, color="white")
 
-    # Controle de volume
+
     screen.draw.filled_rect(volume_button, (100, 100, 200))
     screen.draw.text(f"Volume: {int(volume_level * 100)}%", center=volume_button.center, fontsize=30, color="white")
 
-    # Tela de Game Over
+  
 def draw_game_over():
-    screen.fill((0, 0, 0))  # Tela preta
+    screen.fill((0, 0, 0))  
     screen.draw.text("GAME OVER", center=(WIDTH // 2, HEIGHT // 3), fontsize=50, color="white")
     
     screen.draw.filled_rect(retry_button, (0, 200, 0))
@@ -151,7 +151,7 @@ def draw_game_over():
 
 def draw_hearts():
     spacing = 5
-    heart_width = 70  # valor estimado  ajuste conforme o tamanho real do sprite
+    heart_width = 70  
     x_start = WIDTH - (heart_width * 3 + spacing * 2) - 10
     y = 10
 
@@ -169,18 +169,18 @@ def draw_background():
     tile_width = 512
     tile_height = 512
 
-    # Quantas vezes repetir horizontalmente para cobrir 1360px
+  
     num_tiles_x = math.ceil(WIDTH / tile_width)
 
-    # Parte superior ex nuvens
+  
     for i in range(num_tiles_x):
         x = i * tile_width
-        screen.blit("background_clouds", (x, 0))  # Y=0 para o topo
+        screen.blit("background_clouds", (x, 0)) 
 
-    # Parte inferior ex ceu solido
+
     for i in range(num_tiles_x):
         x = i * tile_width
-        screen.blit("background_solid_sky", (x, tile_height))  # Y=512
+        screen.blit("background_solid_sky", (x, tile_height)) 
 
 def draw_ground():
     tile_top_left = Actor("terrain_grass_block_top_left")
@@ -204,24 +204,23 @@ def draw_ground():
         for col in range(cols):
             x = col * tile_width
 
-            # Ignora a regiao da agua
+           
             tile_rect = Rect((x, y), (tile_width, tile_height))
             if tile_rect.colliderect(agua_rect):
-                continue  # pula esse bloco
-
-            # Escolhe o sprite certo
-            if row == 0:  # Linha do topo
+                continue  
+          
+            if row == 0: 
                 if agua_rect.left - tile_width < x < agua_rect.left + tile_width:
-                    sprite = tile_top_right  # canto esquerdo do buraco
+                    sprite = tile_top_right  
                 elif agua_rect.right - tile_width <= x <= agua_rect.right:
-                    sprite = tile_top_left   # canto direito do buraco
+                    sprite = tile_top_left   
                 elif col == 0:
                     sprite = tile_top_left
                 elif col == cols - 1:
                     sprite = tile_top_right
                 else:
                     sprite = tile_top
-            else:  # Linhas abaixo do topo
+            else:  
                 if agua_rect.left - tile_width < x < agua_rect.left + tile_width:
                     sprite = tile_right
                 elif agua_rect.right - tile_width <= x <= agua_rect.right:
@@ -248,11 +247,11 @@ def draw_water():
     for col in range(cols):
         x = agua_rect.left + col * tile_width + tile_width // 2
 
-        # Topo da água
+    
         tile_top.pos = (x, agua_rect.top + tile_height // 2)
         tile_top.draw()
 
-        # Parte inferior da água
+        
         for row in range(1, rows):
             y = agua_rect.top + row * tile_height + tile_height // 2
             tile_fill.pos = (x, y)
@@ -262,30 +261,30 @@ def check_game_over():
     global current_screen
 
     if vida <= 0:
-        current_screen = "game_over"  # Quando a vida chega a zero, vai para a tela de Game Over
+        current_screen = "game_over" 
 
 def update():
     if current_screen == "jogo":
         update_game()
         check_game_over()
-        play_game_music()  # Reproduzir a música quando a fase começar
+        play_game_music() 
     elif current_screen == "menu":
-        stop_music()  # Parar música no menu
+        stop_music() 
 
-# Função para iniciar a música com o volume correto
+
 def play_game_music():
     global game_music_playing
 
     if not game_music_playing:
-        game_music.play(loops=-1)  # Reproduz a música em loop
-        game_music.set_volume(volume_level)  # Define o volume da música
-        game_music_playing = True  # Marca que a música está tocando
+        game_music.play(loops=-1)  
+        game_music.set_volume(volume_level)  
+        game_music_playing = True  
 
-# Função para parar a música
+
 def stop_music():
     global game_music_playing
-    game_music.stop()  # Para a música
-    game_music_playing = False  # Marca que a música parou de tocar
+    game_music.stop()  
+    game_music_playing = False  
 
 
 def update_game():
@@ -301,7 +300,7 @@ def update_game():
     
     moving = False
 
-    # Agachar
+   
     if keyboard.s and not is_jumping:
         is_crouching = True
         if facing_right:
@@ -311,7 +310,7 @@ def update_game():
     else:
         is_crouching = False
 
-    # Movimento esquerda
+  
     if keyboard.a:
         alien.x -= 6
         if facing_right and is_jumping:
@@ -319,7 +318,7 @@ def update_game():
         facing_right = False
         moving = True
 
-    # Movimento direita
+    
     elif keyboard.d:
         alien.x += 6
         if not facing_right and is_jumping:
@@ -327,7 +326,7 @@ def update_game():
         facing_right = True
         moving = True
 
-    # Pulo
+   
     if keyboard.space and not is_jumping and not is_crouching:
         velocity_y = -14
         is_jumping = True
@@ -339,7 +338,7 @@ def update_game():
         if sound_on:
             sounds.sfx_jump.play()
 
-    # Animaçado de andar
+   
     if moving and not is_jumping and not is_crouching:
         walk_timer += 1
         if walk_timer % 10 == 0:
@@ -351,7 +350,7 @@ def update_game():
     elif not is_jumping and not is_crouching and not moving:
         alien.image = "alien"
 
-    # Gravidade
+    
     velocity_y += gravity
     if velocity_y > 10:
         velocity_y = 10
@@ -359,9 +358,9 @@ def update_game():
     alien.y += velocity_y
 
     if alien.bottom >= ground_y:
-        # Se está na água, não pousa
+       
         if alien.colliderect(agua_rect):
-            pass  # continua caindo
+            pass  
         else:
             alien.bottom = ground_y
             velocity_y = 0
@@ -369,13 +368,13 @@ def update_game():
         
 
 
-    # Limites da tela
+    
     if alien.left < 0:
         alien.left = 0
     if alien.right > WIDTH:
         alien.right = WIDTH
 
-    # Só toma dano se realmente submergir na água (ex: metade do corpo)
+   
     if alien.colliderect(agua_rect) and alien.y > agua_rect.top + 30 and not invulneravel:
         vida -= 1
         alien.x = 100
@@ -384,7 +383,7 @@ def update_game():
         is_jumping = False
         alien.image = "alien"
         invulneravel = True
-        invuln_timer = 60  # 1 segundo de invulnerabilidade
+        invuln_timer = 60  
 
         if sound_on:
             sounds.sfx_hurt.play()
@@ -396,7 +395,7 @@ def update_fish():
     global fish_timer, fish_animation_step, vida, invulneravel, invuln_timer
 
     if fish_timer <= 0:
-        # Peixe faz animação de pulo
+        
         if fish.direction == "up":
             fish.y -= 10
             fish.image = "fish_purple_up"
@@ -409,19 +408,19 @@ def update_fish():
                 fish.y = fish.base_y
                 fish_timer = fish_cooldown
                 fish.direction = "up"
-                fish.visible = False  # SE ESCONDE
+                fish.visible = False  
     else:
         fish_timer -= 1
         if fish_timer == 0:
-            fish.visible = True  # VOLTA A APARECER
+            fish.visible = True  
 
-    # Só colide se visível
+   
     if fish.visible and fish.colliderect(alien) and not invulneravel:
         vida -= 0.5
         invulneravel = True
         invuln_timer = 60
         alien.image = "alien_purple_hit"
-        # Empurra o alien para trás
+       
         if alien.x < fish.x:
             alien.x -= 40
         else:
@@ -436,22 +435,22 @@ def update_frog():
         frog.jump_timer -= 1
     else:
         if not frog.is_jumping:
-            frog.velocity_y = -10  # altura do pulo
+            frog.velocity_y = -10  
             frog.is_jumping = True
-            frog.jump_timer = 30   # espera antes do próximo pulo
+            frog.jump_timer = 30   
             if frog.direction == "left":
                 frog.image = "frog_jump"
             else:
                 frog.image = "frog_jump_2"
 
-    # Movimento lateral durante o pulo
+    
     if frog.is_jumping:
         if frog.direction == "left":
             frog.x -= 3
         else:
             frog.x += 3
 
-    # Gravidade
+  
     frog.velocity_y += gravity
     frog.y += frog.velocity_y
 
@@ -464,7 +463,7 @@ def update_frog():
         else:
             frog.image = "frog_idle_2"
 
-    # Virar antes de cair na água
+   
     borda_agua_esquerda = agua_rect.left
     borda_agua_direita = agua_rect.right
 
@@ -508,7 +507,7 @@ def on_mouse_down(pos):
             if sound_on:
                 sounds.sfx_select.play()
             current_screen = "jogo"
-            vida = vida_max  # Reseta a vida quando começar o jogo
+            vida = vida_max  
         elif sound_button.collidepoint(pos):
             if sound_on:
                 sounds.sfx_select.play()
@@ -517,15 +516,15 @@ def on_mouse_down(pos):
             if sound_on:
                 sounds.sfx_select.play()
             sys.exit()
-        elif volume_button.collidepoint(pos):  # Ajuste do volume
+        elif volume_button.collidepoint(pos):  
             volume_level += 0.1
-            if volume_level > 1:  # Limita o volume a 100%
+            if volume_level > 1: 
                 volume_level = 0
-            game_music.set_volume(volume_level)  # Ajusta o volume da música
+            game_music.set_volume(volume_level) 
     if current_screen == "game_over":
         if retry_button.collidepoint(pos):
             current_screen = "jogo"
-            vida = vida_max  # Reseta a vida
+            vida = vida_max  
         elif menu_button.collidepoint(pos):
             current_screen = "menu"
-            vida = vida_max  # Reseta a vida ao voltar ao menu
+            vida = vida_max  
